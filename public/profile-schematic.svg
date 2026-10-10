@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 760" role="img" aria-label="Isometric security architecture schematic">
+  <!-- Architectural grid -->
+  <g stroke="#cfdbd5" stroke-width="0.5" opacity="0.16">
+    <line x1="0" y1="120" x2="600" y2="120" stroke-dasharray="4 4"/>
+    <line x1="0" y1="240" x2="600" y2="240" stroke-dasharray="4 4"/>
+    <line x1="0" y1="360" x2="600" y2="360" stroke-dasharray="4 4"/>
+    <line x1="0" y1="480" x2="600" y2="480" stroke-dasharray="4 4"/>
+    <line x1="0" y1="600" x2="600" y2="600" stroke-dasharray="4 4"/>
+    <line x1="120" y1="0" x2="120" y2="760" stroke-dasharray="4 4"/>
+    <line x1="300" y1="0" x2="300" y2="760"/>
+    <line x1="480" y1="0" x2="480" y2="760" stroke-dasharray="4 4"/>
+  </g>
+
+  <!-- Volumetric security architecture layers -->
+  <g stroke="#cfdbd5" stroke-width="1.4" fill="none">
+    <polygon points="300,240 490,335 300,430 110,335"/>
+    <polygon points="300,430 490,335 490,455 300,550" stroke-dasharray="5 4"/>
+    <polygon points="300,430 110,335 110,455 300,550" stroke-dasharray="5 4"/>
+  </g>
+
+  <!-- Live edge vector -->
+  <g stroke="#e8eddf" stroke-width="1.7" fill="none">
+    <polyline points="110,335 300,430 490,335"/>
+    <line x1="300" y1="430" x2="300" y2="550"/>
+  </g>
+
+  <!-- Radar sweep and telemetry ring -->
+  <circle cx="300" cy="335" r="58" fill="none" stroke="#f5cb5c" stroke-width="1" stroke-dasharray="4 3"/>
+  <circle cx="300" cy="335" r="6" fill="#f5cb5c"/>
+
+  <!-- Telemetry readouts -->
+  <text x="42" y="64" fill="#cfdbd5" font-size="14" font-family="monospace" letter-spacing="3">SYS_ID // CYBER_ENG</text>
+  <text x="42" y="700" fill="#cfdbd5" font-size="13" font-family="monospace" letter-spacing="3">MODE // DETECT &amp; RESPOND</text>
+  <text x="352" y="66" fill="#f5cb5c" font-size="14" font-family="monospace" letter-spacing="3">LOC // INDIA</text>
+</svg>

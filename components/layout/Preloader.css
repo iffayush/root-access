@@ -1,0 +1,60 @@
+/* Preload curtain — Shadow fullscreen, mono counter, signal progress hairline.
+   Hidden before hydration for returning visitors via
+   `html[data-preloader="seen"]` (set by the inline script in app/layout.tsx). */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+  background: var(--color-shadow-grey);
+}
+
+.preloader-brand {
+  position: absolute;
+  top: calc(var(--nav-height) + 0.35rem);
+  left: var(--spacing-margin);
+  right: var(--spacing-margin);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--color-dust);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--text-meta--letter-spacing);
+  line-height: var(--text-meta--line-height);
+  text-transform: uppercase;
+}
+
+.preloader-counter {
+  position: absolute;
+  right: var(--spacing-margin);
+  bottom: calc(var(--spacing-margin) * 0.85);
+  color: var(--color-ivory);
+  font-family: var(--font-mono);
+  font-size: clamp(4rem, 9vw, 7rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.preloader-line {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-signal);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+html[data-preloader="seen"] .preloader {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    display: none;
+  }
+}
