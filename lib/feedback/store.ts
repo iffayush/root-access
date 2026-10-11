@@ -189,8 +189,9 @@ export async function listSubmissions(): Promise<{
         try {
           const res = await fetch(blob.downloadUrl, { cache: 'no-store' });
           if (!res.ok) {
+            const detail = (await res.text().catch(() => '')).slice(0, 200);
             unreadable.push(
-              `${blob.pathname} (download failed: HTTP ${res.status})`
+              `${blob.pathname} (download failed: HTTP ${res.status} ${detail})`
             );
             continue;
           }
