@@ -140,19 +140,68 @@ export async function listSubmissions(): Promise<{
   const unreadable: string[] = [];
   const entries: FeedbackEntry[] = [];
 
+  const readWithReason = async (
+    pathname: string
+  ): Promise<{ data: FeedbackEntry | null; reason?: string }> => {
+    if (hasBlob()) {
+      try {
+        const meta = await head(pathname);
+        const res = await fetch(meta.downloadUrl, { cache: "no-store" });
+        if (!res.ok) {
+          return { data: null, reason: `download failed (HTTP ${res.status})` };
+        }
+        try {
+          return { data: JSON.parse(await res.text()) as FeedbackEntry };
+        } catch {
+          return { data: null, reason: "content is not valid JSON" };
+        }
+      } catch (error) {
+        return {
+          data: null,
+          reason: `read failed: ${error instanceof Error ? error.message : String(error)}`,
+        };
+      }
+    }
+    try {
+      const file = path.join(DEV_DIR, pathname);
+      const rawFile = await readFile(file, "utf8");
+      try {
+        return { data: JSON.parse(rawFile) as FeedbackEntry };
+      } catch {
+        return { data: null, reason: "content is not valid JSON" };
+      }
+    } catch (error) {
+      return {
+        data: null,
+        reason: `read failed: ${error instanceof Error ? error.message : String(error)}`,
+      };
+    }
+  };
+
   if (hasBlob()) {
     let cursor: string | undefined;
     do {
       const result = await list({ prefix: SUBMISSION_PREFIX, cursor });
       for (const blob of result.blobs) {
         raw.push(blob.pathname);
-        const data = await readJson<FeedbackEntry>(blob.pathname);
-        if (data) {
-          entries.push(data);
-        } else {
-          unreadable.push(blob.pathname);
-          console.error(
-            `[feedback] unreadable submission blob skipped: ${blob.pathname}`
+        // Read via the list result's downloadUrl directly — skipping the
+        // head() hop removes one failing call from the read path.
+        try {
+          const res = await fetch(blob.downloadUrl, { cache: 'no-store' });
+          if (!res.ok) {
+            unreadable.push(
+              `${blob.pathname} (download failed: HTTP ${res.status})`
+            );
+            continue;
+          }
+          try {
+            entries.push(JSON.parse(await res.text()) as FeedbackEntry);
+          } catch {
+            unreadable.push(`${blob.pathname} (content is not valid JSON)`);
+          }
+        } catch (error) {
+          unreadable.push(
+            `${blob.pathname} (read failed: ${error instanceof Error ? error.message : String(error)})`
           );
         }
       }
@@ -161,12 +210,13 @@ export async function listSubmissions(): Promise<{
   } else {
     for await (const pathname of listDevPrefix(SUBMISSION_PREFIX)) {
       raw.push(pathname);
-      const data = await readJson<FeedbackEntry>(pathname);
+      const { data, reason } = await readWithReason(pathname);
       if (data) {
         entries.push(data);
       } else {
-        unreadable.push(pathname);
-        console.error(`[feedback] unreadable dev submission skipped: ${pathname}`);
+        const label = reason ? `${pathname} (${reason})` : pathname;
+        unreadable.push(label);
+        console.error(`[feedback] unreadable dev submission skipped: ${label}`);
       }
     }
   }
