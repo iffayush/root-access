@@ -48,7 +48,7 @@ async function readJson<T>(pathname: string): Promise<T | null> {
   if (hasBlob()) {
     try {
       const meta = await head(pathname);
-      const res = await fetch(meta.downloadUrl, { cache: "no-store" });
+      const res = await fetch(meta.url, { cache: "no-store" });
       if (!res.ok) return null;
       return (await res.json()) as T;
     } catch {
@@ -67,7 +67,7 @@ async function readJson<T>(pathname: string): Promise<T | null> {
 async function writeJson(pathname: string, data: unknown): Promise<void> {
   if (hasBlob()) {
     await put(pathname, JSON.stringify(data), {
-      access: "private",
+      access: "public",
       contentType: "application/json",
       addRandomSuffix: false,
     });
@@ -146,7 +146,7 @@ export async function listSubmissions(): Promise<{
     if (hasBlob()) {
       try {
         const meta = await head(pathname);
-        const res = await fetch(meta.downloadUrl, { cache: "no-store" });
+        const res = await fetch(meta.url, { cache: "no-store" });
         if (!res.ok) {
           return { data: null, reason: `download failed (HTTP ${res.status})` };
         }
@@ -187,7 +187,7 @@ export async function listSubmissions(): Promise<{
         // Read via the list result's downloadUrl directly — skipping the
         // head() hop removes one failing call from the read path.
         try {
-          const res = await fetch(blob.downloadUrl, { cache: 'no-store' });
+          const res = await fetch(blob.url, { cache: 'no-store' });
           if (!res.ok) {
             const detail = (await res.text().catch(() => '')).slice(0, 200);
             unreadable.push(
@@ -231,7 +231,7 @@ export async function getSubmission(id: string): Promise<FeedbackEntry | null> {
   }
   const blob = await findSubmissionBlob(id);
   if (!blob) return null;
-  const res = await fetch(blob.downloadUrl, { cache: "no-store" });
+  const res = await fetch(blob.url, { cache: "no-store" });
   if (!res.ok) return null;
   return (await res.json()) as FeedbackEntry;
 }
