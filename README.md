@@ -95,7 +95,6 @@ The point of all this.
 [![Email](https://img.shields.io/badge/Email-iffayush.work%40gmail.com-242423?style=for-the-badge&logo=gmail&logoColor=f5cb5c)](mailto:iffayush.work@gmail.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-in%2Fiffayush-242423?style=for-the-badge&logo=linkedin&logoColor=f5cb5c)](https://linkedin.com/in/iffayush)
 [![GitHub](https://img.shields.io/badge/GitHub-iffayush-242423?style=for-the-badge&logo=github&logoColor=f5cb5c)](https://github.com/iffayush)
-[![Bugcrowd](https://img.shields.io/badge/Bugcrowd-Security_Researcher-242423?style=for-the-badge&logo=bugcrowd&logoColor=f5cb5c)](https://bugcrowd.com)
 
 ---
 
