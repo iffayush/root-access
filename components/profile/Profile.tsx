@@ -132,7 +132,7 @@ export function Profile() {
       <PageGrid className="mb-12">
         <div className="profile-header col-span-12 flex items-center justify-between border-b border-[var(--hairline)] pb-4 will-change-[transform,opacity]">
           <span className="font-mono text-xs tracking-widest text-[var(--color-dust)] uppercase">
-            03 / PROFILE
+            02 / PROFILE
           </span>
           <span className="font-mono text-xs tracking-wider text-[var(--color-dust)] uppercase">
             {siteConfig.location} // {siteConfig.year}

@@ -1,0 +1,174 @@
+/* Feedback box — telemetry-styled rating + one-liner transmission card.
+   Palette only: Shadow/Graphite surfaces, Dust labels, Signal accents. */
+
+.feedback-box {
+  position: relative;
+  max-width: 34rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border: 1px solid var(--hairline);
+  background: color-mix(in srgb, var(--color-graphite) 35%, transparent);
+}
+
+.feedback-box__prompt {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--text-meta--letter-spacing);
+  text-transform: uppercase;
+  color: var(--color-signal);
+}
+
+.feedback-box__dots {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.feedback-box__dot {
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--color-dust) 45%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.feedback-box__dot:hover,
+.feedback-box__dot:focus-visible {
+  transform: scale(1.15);
+}
+
+.feedback-box__dot:focus-visible {
+  outline: 2px solid var(--color-ivory);
+  outline-offset: 3px;
+}
+
+.feedback-box__dot.is-filled {
+  background: var(--color-signal);
+  border-color: var(--color-signal);
+}
+
+.feedback-box__rating-readout {
+  margin-left: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.08em;
+  color: var(--color-dust);
+}
+
+.feedback-box__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.feedback-box__label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-dust);
+}
+
+.feedback-box__input {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--hairline);
+  background: color-mix(in srgb, var(--color-shadow-grey) 70%, transparent);
+  color: var(--color-ivory);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+.feedback-box__input::placeholder {
+  color: color-mix(in srgb, var(--color-dust) 55%, transparent);
+}
+
+.feedback-box__input:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 1px;
+}
+
+.feedback-box__witty {
+  margin: 0.25rem 0 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--color-dust) 75%, transparent);
+}
+
+.feedback-box__error {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--color-signal);
+}
+
+.feedback-box__submit {
+  align-self: flex-start;
+  padding: 0.8rem 1.6rem;
+  border: 1px solid var(--color-signal);
+  background: transparent;
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.feedback-box__submit:hover:not(:disabled) {
+  background: var(--color-signal);
+  color: var(--color-shadow-grey);
+}
+
+.feedback-box__submit:focus-visible {
+  outline: 2px solid var(--color-ivory);
+  outline-offset: 3px;
+}
+
+.feedback-box__submit:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.feedback-box__done {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-signal);
+}
+
+.feedback-box__note {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  color: var(--color-dust);
+}
+
+/* Honeypot: rendered, interactive to bots, invisible to humans. */
+.feedback-box__honeypot {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}

@@ -166,7 +166,7 @@
   top: 0;
   left: 0;
   z-index: var(--z-menu);
-  width: min(420px, 80vw);
+  width: min(560px, 82vw);
   pointer-events: none;
   will-change: transform;
 }

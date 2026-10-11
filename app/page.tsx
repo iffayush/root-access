@@ -21,8 +21,8 @@ export default function Home() {
       <main id="content" className="flex-1">
         <Hero />
         <ScrollMotion>
-          <SelectedWork />
           <Profile />
+          <SelectedWork />
           <Experience />
           <FieldNotes />
           <Capabilities />

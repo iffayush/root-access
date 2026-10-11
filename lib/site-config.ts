@@ -37,6 +37,7 @@ export const siteConfig: {
     { label: "Work", href: "/#work" },
     { label: "About", href: "/#profile" },
     { label: "Field Notes", href: "/#field-notes" },
+    { label: "Testimonials", href: "/testimonials" },
     { label: "Contact", href: "/#contact" },
   ],
 };

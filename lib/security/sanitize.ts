@@ -42,3 +42,18 @@ export function sanitizeText(input: string, maxLength = 2000): string {
 export function sanitizeEmail(input: string, maxLength = 254): string {
   return escapeHtml(input.trim().toLowerCase().slice(0, maxLength));
 }
+
+/**
+ * Clean free text that will be rendered through React text nodes (which
+ * escape output automatically). Strips control characters, trims, and caps
+ * length — but does NOT entity-escape, otherwise display would double-escape.
+ * Use `escapeHtml` for content heading into non-JSX contexts instead.
+ */
+export function cleanText(input: string, maxLength: number): string {
+  return input
+    .replace(/\r\n/g, "\n")
+    // eslint-disable-next-line no-control-regex
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
+    .trim()
+    .slice(0, maxLength);
+}

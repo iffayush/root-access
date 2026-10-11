@@ -1,0 +1,62 @@
+/* Testimonials page — dark telemetry layout matching the Profile section. */
+
+.testimonials {
+  background: var(--color-shadow-grey);
+  color: var(--color-ivory);
+  padding-block: var(--spacing-section);
+  border-bottom: 1px solid var(--hairline);
+  min-height: calc(100svh - var(--nav-height));
+}
+
+.testimonials__title {
+  margin: 0 0 1.25rem;
+  font-family: var(--font-sans);
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  line-height: 0.95;
+  color: var(--color-ivory);
+}
+
+.testimonials__copy {
+  margin: 0 0 2rem;
+  max-width: 30rem;
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  color: var(--color-dust);
+}
+
+.testimonials__log-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--text-meta--letter-spacing);
+  text-transform: uppercase;
+  color: var(--color-dust);
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 0.75rem;
+}
+
+.testimonials__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.testimonials__dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-dust) 40%, transparent);
+}
+
+.testimonials__dot.is-filled {
+  background: var(--color-signal);
+  border-color: var(--color-signal);
+}
+
+.testimonials__empty {
+  padding: 2.5rem 0;
+}

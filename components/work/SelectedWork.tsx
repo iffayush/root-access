@@ -118,7 +118,7 @@ export function SelectedWork() {
   const previewRef = useRef<HTMLDivElement>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const posRef = useRef({ x: 0, y: 0 });
-  const sizeRef = useRef({ w: 420, h: 300 });
+  const sizeRef = useRef({ w: 560, h: 340 });
   const rafRef = useRef(0);
 
   useEffect(() => {
@@ -135,8 +135,8 @@ export function SelectedWork() {
   useEffect(() => {
     const el = previewRef.current;
     if (!el || !previewProject) return;
-    const maxWidth = Math.min(420, window.innerWidth * 0.8);
-    const maxHeight = window.innerHeight * 0.72;
+    const maxWidth = Math.min(560, window.innerWidth * 0.85);
+    const maxHeight = window.innerHeight * 0.76;
     const ratio = previewProject.imageWidth / previewProject.imageHeight;
     el.style.width = `${Math.round(Math.min(maxWidth, maxHeight * ratio))}px`;
   }, [previewProject]);
@@ -187,7 +187,7 @@ export function SelectedWork() {
       <PageGrid className="mb-12">
         <div className="section-header col-span-12 flex items-center justify-between border-b border-[color-mix(in_srgb,var(--color-graphite)_25%,transparent)] pb-4">
           <span className="font-mono text-xs tracking-widest text-[var(--color-graphite)] uppercase font-semibold">
-            02 / SELECTED WORK
+            03 / SELECTED WORK
           </span>
           <span className="font-mono text-xs tracking-wider text-[var(--color-graphite)] uppercase">
             EXHIBITS 01–03

@@ -1,0 +1,148 @@
+/* Curation console — minimal, dark, utilitarian. Reachable only by knowing
+   the URL; the data itself is token-gated server-side. */
+
+.admin-console {
+  min-height: calc(100svh - var(--nav-height));
+  background: var(--color-shadow-grey);
+  color: var(--color-ivory);
+  padding: calc(var(--nav-height) + 2rem) var(--spacing-margin) 4rem;
+}
+
+.admin-console__label {
+  margin: 0 0 1.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--text-meta--letter-spacing);
+  text-transform: uppercase;
+  color: var(--color-signal);
+}
+
+.admin-console__unlock {
+  display: flex;
+  gap: 0.75rem;
+  max-width: 26rem;
+}
+
+.admin-console__input {
+  flex: 1;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--hairline);
+  background: color-mix(in srgb, var(--color-graphite) 35%, transparent);
+  color: var(--color-ivory);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.admin-console__input:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 1px;
+}
+
+.admin-console__unlock-btn {
+  padding: 0.7rem 1.2rem;
+  border: 1px solid var(--color-signal);
+  background: transparent;
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+
+.admin-console__unlock-btn:hover {
+  background: var(--color-signal);
+  color: var(--color-shadow-grey);
+}
+
+.admin-console__error {
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--color-signal);
+}
+
+.admin-console__empty {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--color-dust);
+}
+
+.admin-console__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-console__entry {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.admin-console__entry-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.admin-console__name {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ivory);
+}
+
+.admin-console__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-console__btn {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--hairline);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.admin-console__btn:disabled {
+  opacity: 0.4;
+  cursor: wait;
+}
+
+.admin-console__btn--approve {
+  color: var(--color-ivory);
+}
+
+.admin-console__btn--approve:hover:not(:disabled) {
+  border-color: var(--color-signal);
+  color: var(--color-signal);
+}
+
+.admin-console__btn--reject {
+  color: var(--color-dust);
+}
+
+.admin-console__btn--reject:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--color-dust) 60%, transparent);
+  color: var(--color-shadow-grey);
+  background: var(--color-dust);
+}
+
+.admin-console__comment {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-dust);
+}
