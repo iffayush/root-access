@@ -62,7 +62,7 @@ Production build: `npm run build && npm start`.
 
 - **Headers on every route**: Content-Security-Policy, `X-Frame-Options: DENY`, `nosniff`, HSTS (preload), `Referrer-Policy`, `Permissions-Policy` locking camera/mic/geolocation. Defined in `next.config.ts`, no CDN config required.
 - **No secrets in the repo.** `.env.example` documents the keys future features will need; `.gitignore` covers the rest.
-- **No trackers, no cookies, no analytics.** The only thing phoning home is you.
+- **One tracker, on purpose: Vercel's cookieless, first-party page counter.** No cookies, no fingerprinting, no third-party scripts — the analytics script is served from this site's own origin and passes its own CSP.
 - **The contact form doesn't exist yet.** When it does, it ships behind a Zod schema, a 5 req/min per-IP rate limiter, a honeypot field, and server-side sanitization — the scaffolding is already in `lib/security/` and `lib/validation/`.
 - Current threat model: static HTML, self-hosted assets, three outbound links. I keep the postcard small on purpose.
 

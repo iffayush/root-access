@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Instrument_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Preloader } from "@/components/layout/Preloader";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
@@ -47,6 +48,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </noscript>
         {children}
         <Preloader />
+        {/* Cookieless, first-party page-view analytics (Vercel Web Analytics). */}
+        <Analytics />
       </body>
     </html>
   );
