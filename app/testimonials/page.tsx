@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     "Ratings and one-line transmissions from visitors — curated, stored, occasionally used therapeutically.",
 };
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 async function getApproved(): Promise<FeedbackEntry[]> {
   try {
