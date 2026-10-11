@@ -15,9 +15,11 @@ import path from "node:path";
  *
  * Dev fallback: when BLOB_READ_WRITE_TOKEN is absent (local dev without
  * `vercel env pull`), a filesystem store under `.feedback-dev/` keeps the
- * feature fully demonstrable — and unlike an in-memory map it is shared
- * across route bundles. The fallback never runs in production (the token is
- * auto-injected there).
+ * feature demonstrable — and unlike an in-memory map it is shared across
+ * route bundles. The fallback never runs in production (the token is
+ * auto-injected there). NOTE: on a serverless deployment without the token,
+ * writes fail read-only — which is exactly what the `storageMode()` export
+ * exists to surface in the admin console.
  */
 
 export type FeedbackEntry = {
@@ -34,6 +36,11 @@ const RATELIMIT_PREFIX = "ratelimit/";
 
 const hasBlob = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 const DEV_DIR = path.join(process.cwd(), ".feedback-dev");
+
+/** Which backend is live — surfaced in the admin console for diagnosis. */
+export function storageMode(): "blob" | "filesystem-fallback" {
+  return hasBlob() ? "blob" : "filesystem-fallback";
+}
 
 // --- generic storage helpers ----------------------------------------------
 
@@ -103,6 +110,27 @@ export async function saveSubmission(entry: FeedbackEntry): Promise<void> {
   await writeJson(`${SUBMISSION_PREFIX}${entry.id}.json`, entry);
 }
 
+/** Resolve a submission blob even when Vercel appended a random suffix. */
+async function findSubmissionBlob(
+  id: string
+): Promise<ListBlobResultBlob | null> {
+  const prefix = `${SUBMISSION_PREFIX}${id}`;
+  let cursor: string | undefined;
+  do {
+    const result = await list({ prefix, cursor });
+    for (const blob of result.blobs) {
+      if (
+        blob.pathname === `${prefix}.json` ||
+        blob.pathname.startsWith(`${prefix}-`)
+      ) {
+        return blob;
+      }
+    }
+    cursor = result.cursor;
+  } while (cursor);
+  return null;
+}
+
 export async function listSubmissions(): Promise<FeedbackEntry[]> {
   const entries: FeedbackEntry[] = [];
   if (hasBlob()) {
@@ -111,25 +139,47 @@ export async function listSubmissions(): Promise<FeedbackEntry[]> {
       const result = await list({ prefix: SUBMISSION_PREFIX, cursor });
       for (const blob of result.blobs) {
         const data = await readJson<FeedbackEntry>(blob.pathname);
-        if (data) entries.push(data);
+        if (data) {
+          entries.push(data);
+        } else {
+          console.error(
+            `[feedback] unreadable submission blob skipped: ${blob.pathname}`
+          );
+        }
       }
       cursor = result.cursor;
     } while (cursor);
   } else {
     for await (const pathname of listDevPrefix(SUBMISSION_PREFIX)) {
       const data = await readJson<FeedbackEntry>(pathname);
-      if (data) entries.push(data);
+      if (data) {
+        entries.push(data);
+      } else {
+        console.error(`[feedback] unreadable dev submission skipped: ${pathname}`);
+      }
     }
   }
   return entries;
 }
 
 export async function getSubmission(id: string): Promise<FeedbackEntry | null> {
-  return readJson<FeedbackEntry>(`${SUBMISSION_PREFIX}${id}.json`);
+  if (!hasBlob()) {
+    return readJson<FeedbackEntry>(`${SUBMISSION_PREFIX}${id}.json`);
+  }
+  const blob = await findSubmissionBlob(id);
+  if (!blob) return null;
+  const res = await fetch(blob.downloadUrl, { cache: "no-store" });
+  if (!res.ok) return null;
+  return (await res.json()) as FeedbackEntry;
 }
 
 export async function deleteSubmission(id: string): Promise<void> {
-  await removePath(`${SUBMISSION_PREFIX}${id}.json`);
+  if (!hasBlob()) {
+    await removePath(`${SUBMISSION_PREFIX}${id}.json`);
+    return;
+  }
+  const blob = await findSubmissionBlob(id);
+  if (blob) await del(blob.url);
 }
 
 // --- curated / approved ----------------------------------------------------

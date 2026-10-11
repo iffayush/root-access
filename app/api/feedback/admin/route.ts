@@ -5,6 +5,7 @@ import {
   writeApproved,
   getSubmission,
   deleteSubmission,
+  storageMode,
 } from "@/lib/feedback/store";
 
 export const runtime = "nodejs";
@@ -33,7 +34,10 @@ export async function GET(request: Request) {
     listSubmissions(),
     readApproved(),
   ]);
-  return Response.json({ pending, approved });
+  // storageMode tells the console whether the deployment actually has the
+  // Blob token — "filesystem-fallback" on Vercel means Storage isn't
+  // connected to THIS deployment (redeploy after connecting).
+  return Response.json({ pending, approved, storage: storageMode() });
 }
 
 export async function POST(request: Request) {

@@ -8,20 +8,28 @@ export const runtime = "nodejs";
 
 /**
  * POST /api/feedback — public submission endpoint.
- * Layers, in order: in-process rate limit (cheap first barrier) → blob-backed
- * per-IP rate limit (survives serverless instances) → honeypot → time-trap →
- * Zod shape/length validation → cleanText sanitization → store as private
- * blob. Nothing here is ever rendered to other users until Ayush curates it
- * (see /api/feedback/admin).
+ * Layers, in order: blob-backed per-IP rate limit (fails closed with 503 if
+ * storage is unreachable — never a raw 500) → honeypot (silent drop) →
+ * time-trap → Zod shape/length validation → cleanText sanitization → store
+ * as private blob. Nothing here is ever rendered to other users until it is
+ * curated via /api/feedback/admin.
  */
 export async function POST(request: Request) {
   const ip = clientIpFrom(request.headers);
 
   // 3 submissions per hour per client — a guestbook, not a log stream.
-  if (!(await allowSubmission(`feedback:${ip}`, 3, 60 * 60 * 1000))) {
+  try {
+    if (!(await allowSubmission(`feedback:${ip}`, 3, 60 * 60 * 1000))) {
+      return Response.json(
+        { error: "Too many transmissions from your position. Try again later." },
+        { status: 429, headers: { "Retry-After": "3600" } }
+      );
+    }
+  } catch (error) {
+    console.error("[feedback] rate limiter failure:", error);
     return Response.json(
-      { error: "Too many transmissions from your position. Try again later." },
-      { status: 429, headers: { "Retry-After": "3600" } }
+      { error: "Transmission offline. Try again later." },
+      { status: 503 }
     );
   }
 

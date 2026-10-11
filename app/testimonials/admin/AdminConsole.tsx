@@ -17,6 +17,7 @@ export function AdminConsole() {
   const [pending, setPending] = useState<FeedbackEntry[]>([]);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [storageMode, setStorageMode] = useState<string | null>(null);
 
   const load = useCallback(async (activeToken: string) => {
     setPhase("loading");
@@ -31,8 +32,12 @@ export function AdminConsole() {
         setError(res.status === 401 ? "ACCESS DENIED." : "CURATION OFFLINE.");
         return;
       }
-      const data = (await res.json()) as { pending: FeedbackEntry[] };
+      const data = (await res.json()) as {
+        pending: FeedbackEntry[];
+        storage?: string;
+      };
       setPending(data.pending);
+      setStorageMode(data.storage ?? null);
       setPhase("ready");
     } catch {
       setPhase("error");
@@ -108,7 +113,18 @@ export function AdminConsole() {
     <main className="admin-console">
       <p className="admin-console__label">
         CURATION // PENDING ({pending.length})
+        {storageMode && (
+          <span className="admin-console__mode"> · STORE: {storageMode}</span>
+        )}
       </p>
+
+      {storageMode === "filesystem-fallback" && (
+        <p className="admin-console__warning">
+          THIS DEPLOYMENT HAS NO BLOB TOKEN — submissions are hitting an empty
+          local fallback. Connect the Blob store in Vercel (Storage → Connect)
+          and redeploy.
+        </p>
+      )}
 
       {pending.length === 0 ? (
         <p className="admin-console__empty">NO PENDING TRANSMISSIONS.</p>
