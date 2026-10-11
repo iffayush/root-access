@@ -18,6 +18,8 @@ export function AdminConsole() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [storageMode, setStorageMode] = useState<string | null>(null);
+  const [rawPaths, setRawPaths] = useState<string[]>([]);
+  const [unreadable, setUnreadable] = useState<string[]>([]);
 
   const load = useCallback(async (activeToken: string) => {
     setPhase("loading");
@@ -35,9 +37,13 @@ export function AdminConsole() {
       const data = (await res.json()) as {
         pending: FeedbackEntry[];
         storage?: string;
+        raw?: string[];
+        unreadable?: string[];
       };
       setPending(data.pending);
       setStorageMode(data.storage ?? null);
+      setRawPaths(data.raw ?? []);
+      setUnreadable(data.unreadable ?? []);
       setPhase("ready");
     } catch {
       setPhase("error");
@@ -124,6 +130,23 @@ export function AdminConsole() {
           local fallback. Connect the Blob store in Vercel (Storage → Connect)
           and redeploy.
         </p>
+      )}
+
+      {rawPaths.length > 0 && unreadable.length > 0 && (
+        <div className="admin-console__warning">
+          <p style={{ margin: "0 0 0.5rem" }}>
+            UNREADABLE BLOBS ({unreadable.length}) — found in the store but not
+            parseable as feedback entries. Check the deployment logs, or
+            delete them from Storage → Blob.
+          </p>
+          <ul style={{ margin: 0, paddingLeft: "1rem" }}>
+            {unreadable.map((pathname) => (
+              <li key={pathname} style={{ wordBreak: "break-all" }}>
+                {pathname}
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       {pending.length === 0 ? (

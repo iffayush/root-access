@@ -131,17 +131,26 @@ async function findSubmissionBlob(
   return null;
 }
 
-export async function listSubmissions(): Promise<FeedbackEntry[]> {
+export async function listSubmissions(): Promise<{
+  entries: FeedbackEntry[];
+  raw: string[];
+  unreadable: string[];
+}> {
+  const raw: string[] = [];
+  const unreadable: string[] = [];
   const entries: FeedbackEntry[] = [];
+
   if (hasBlob()) {
     let cursor: string | undefined;
     do {
       const result = await list({ prefix: SUBMISSION_PREFIX, cursor });
       for (const blob of result.blobs) {
+        raw.push(blob.pathname);
         const data = await readJson<FeedbackEntry>(blob.pathname);
         if (data) {
           entries.push(data);
         } else {
+          unreadable.push(blob.pathname);
           console.error(
             `[feedback] unreadable submission blob skipped: ${blob.pathname}`
           );
@@ -151,15 +160,18 @@ export async function listSubmissions(): Promise<FeedbackEntry[]> {
     } while (cursor);
   } else {
     for await (const pathname of listDevPrefix(SUBMISSION_PREFIX)) {
+      raw.push(pathname);
       const data = await readJson<FeedbackEntry>(pathname);
       if (data) {
         entries.push(data);
       } else {
+        unreadable.push(pathname);
         console.error(`[feedback] unreadable dev submission skipped: ${pathname}`);
       }
     }
   }
-  return entries;
+
+  return { entries, raw, unreadable };
 }
 
 export async function getSubmission(id: string): Promise<FeedbackEntry | null> {

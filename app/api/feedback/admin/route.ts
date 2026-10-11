@@ -30,14 +30,22 @@ export async function GET(request: Request) {
   if (!isAuthorized(request)) {
     return Response.json({ error: "Unauthorized." }, { status: 401 });
   }
-  const [pending, approved] = await Promise.all([
+  const [{ entries, raw, unreadable }, approved] = await Promise.all([
     listSubmissions(),
     readApproved(),
   ]);
   // storageMode tells the console whether the deployment actually has the
   // Blob token — "filesystem-fallback" on Vercel means Storage isn't
-  // connected to THIS deployment (redeploy after connecting).
-  return Response.json({ pending, approved, storage: storageMode() });
+  // connected to THIS deployment (redeploy after connecting). `raw` lists
+  // every pathname the store reports, `unreadable` the ones that failed to
+  // parse as feedback entries.
+  return Response.json({
+    pending: entries,
+    approved,
+    storage: storageMode(),
+    raw,
+    unreadable,
+  });
 }
 
 export async function POST(request: Request) {
