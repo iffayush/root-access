@@ -1,35 +1,29 @@
 import { randomUUID } from "node:crypto";
 import { feedbackSchema } from "@/lib/validation/feedback";
 import { cleanText } from "@/lib/security/sanitize";
-import { clientIpFrom } from "@/lib/security/rate-limit";
-import { allowSubmission, saveSubmission } from "@/lib/feedback/store";
+import { clientIpFrom, rateLimit } from "@/lib/security/rate-limit";
+import { saveSubmission } from "@/lib/feedback/store";
 
 export const runtime = "nodejs";
 
 /**
  * POST /api/feedback — public submission endpoint.
- * Layers, in order: blob-backed per-IP rate limit (fails closed with 503 if
- * storage is unreachable — never a raw 500) → honeypot (silent drop) →
- * time-trap → Zod shape/length validation → cleanText sanitization → store
- * as private blob. Nothing here is ever rendered to other users until it is
- * curated via /api/feedback/admin.
+ * Layers, in order: in-memory per-IP rate limit (best-effort, per server
+ * instance — the real spam control is the curation step) → honeypot
+ * (silent drop) → time-trap → Zod shape/length validation → cleanText
+ * sanitization → store as blob for review. Nothing here is ever rendered
+ * to other users until it is curated via /api/feedback/admin.
  */
 export async function POST(request: Request) {
   const ip = clientIpFrom(request.headers);
 
-  // 3 submissions per hour per client — a guestbook, not a log stream.
-  try {
-    if (!(await allowSubmission(`feedback:${ip}`, 3, 60 * 60 * 1000))) {
-      return Response.json(
-        { error: "Too many transmissions from your position. Try again later." },
-        { status: 429, headers: { "Retry-After": "3600" } }
-      );
-    }
-  } catch (error) {
-    console.error("[feedback] rate limiter failure:", error);
+  // Best-effort per-IP limit: 3 per hour. Pure in-memory — it cannot fail
+  // the request the way the blob-backed limiter did.
+  const gate = rateLimit(`feedback:${ip}`, 3, 60 * 60 * 1000);
+  if (!gate.allowed) {
     return Response.json(
-      { error: "Transmission offline. Try again later." },
-      { status: 503 }
+      { error: "Too many transmissions from your position. Try again later." },
+      { status: 429, headers: { "Retry-After": String(gate.retryAfterSeconds) } }
     );
   }
 

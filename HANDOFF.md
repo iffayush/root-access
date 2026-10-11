@@ -54,6 +54,13 @@ Rhythm: Hero dark, Work ivory, Profile dark, Experience ivory, Field Notes dark/
 
 **Preloader gate.** `components/layout/Preloader.tsx/.css` + `lib/preload-gate.ts`, mounted last in `layout.tsx`; `--z-preloader: 60`. Shadow curtain, mono `000→100` counter bottom-right, signal hairline, name + `PORTFOLIO // {year}` top corners. Counter caps at 92 until the window `load` event; 2s floor (`MIN_DURATION`); 6s failsafe (`FORCE_FINISH`). Exit: counter drifts, curtain slides up `power4.inOut`. **`HeroMotion` builds its intro `paused: true` and plays only when `releasePreloadGate()` fires — called as the curtain starts lifting. Any new above-the-fold entrance MUST subscribe via `onPreloadGateRelease`.** Once per session (`sessionStorage["preloader-seen"]`); a pre-paint inline script sets `html[data-preloader="seen"]` so returning visitors never see the SSR'd curtain; noscript CSS hide; reduced-motion skip; blocked-storage fallback — every skip path still releases the gate.
 
+**Testimonials / feedback system (2026-10-11, live on production).** The site's **first dynamic endpoints** — it is no longer fully static:
+- `POST /api/feedback`: blob-backed per-IP rate limit (3/hour, fails closed) → honeypot (silent drop) → time-trap (≥2s) → Zod schema (`lib/validation/feedback.ts`) → `cleanText` sanitization → private-file write. Never a raw 500 — storage failures return graceful 503s.
+- `GET/POST /api/feedback/admin`: ADMIN_TOKEN-gated (constant-time compare, `x-admin-token` header) curation — list pending, approve (moves to `approved.json`), reject (deletes). Console at `/testimonials/admin` (unlisted, noindex), self-diagnosing: shows `STORE: blob|filesystem-fallback` and lists unreadable blobs with reasons.
+- Storage: **Vercel Blob, `access: "public"`** — permanent URLs, no presigning. A **private** store was the original bug: private presigned downloadUrls returned 403 on every production read while writes worked. Public + unguessable UUID pathnames was the deliberate trade (pending raw JSON is only fetchable by URL guessing). Curation is the privacy control — nothing renders publicly without approval.
+- Box behavior: menu-only page (nav entry `Testimonials` → `/testimonials`), asks **once per session** (`sessionStorage["feedback-transmitted"]`), 6 rotating witty microcopy lines, 5 signal-dot rating, 140-char one-liner, optional callsign. Empty state is intentional until real entries are approved.
+- Gotcha that cost hours: editing `next.config.ts` while `next dev` runs can restart it on **port 3000**; and Blob store delete/recreate invalidates the deployment's token until the next redeploy ("This store does not exist" = stale token → redeploy).
+
 ## Do not build yet
 
 Stop after each remaining phase and wait.

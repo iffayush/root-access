@@ -1,5 +1,4 @@
 import { head, put, del, list, type ListBlobResultBlob } from "@vercel/blob";
-import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import path from "node:path";
 
@@ -32,7 +31,6 @@ export type FeedbackEntry = {
 
 const SUBMISSION_PREFIX = "feedback/";
 const APPROVED_PATH = "approved.json";
-const RATELIMIT_PREFIX = "ratelimit/";
 
 const hasBlob = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 const DEV_DIR = path.join(process.cwd(), ".feedback-dev");
@@ -70,6 +68,7 @@ async function writeJson(pathname: string, data: unknown): Promise<void> {
       access: "public",
       contentType: "application/json",
       addRandomSuffix: false,
+      allowOverwrite: true,
     });
     return;
   }
@@ -255,21 +254,3 @@ export async function writeApproved(entries: FeedbackEntry[]): Promise<void> {
   await writeJson(APPROVED_PATH, entries);
 }
 
-// --- rate limiting (cross-instance) ----------------------------------------
-
-export async function allowSubmission(
-  clientKey: string,
-  limit = 3,
-  windowMs = 60 * 60 * 1000
-): Promise<boolean> {
-  const hash = createHash("sha256").update(clientKey).digest("hex").slice(0, 32);
-  const pathname = `${RATELIMIT_PREFIX}${hash}.json`;
-  const now = Date.now();
-
-  const stored = await readJson<number[]>(pathname);
-  const stamps = (stored ?? []).filter((t) => now - t < windowMs);
-  if (stamps.length >= limit) return false;
-  stamps.push(now);
-  await writeJson(pathname, stamps);
-  return true;
-}
