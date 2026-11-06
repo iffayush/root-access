@@ -178,7 +178,11 @@ export function AdminConsole() {
                   </button>
                 </span>
               </div>
-              <p className="admin-console__comment">“{entry.comment}”</p>
+              {entry.comment ? (
+                <p className="admin-console__comment">“{entry.comment}”</p>
+              ) : (
+                <p className="admin-console__comment">(rating only — no comment)</p>
+              )}
             </li>
           ))}
         </ul>

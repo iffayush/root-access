@@ -1,0 +1,296 @@
+/* First-visit rating prompt — a non-blocking card pinned to the corner.
+   Same telemetry palette as the feedback box: Shadow surface, Dust labels,
+   Signal accents. Sits above the nav, below the skip link and preloader. */
+
+.rating-prompt {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 40;
+  width: min(23rem, calc(100vw - 2rem));
+  max-height: calc(100svh - 2rem);
+  overflow-y: auto;
+  padding: 1.5rem 1.5rem 1.4rem;
+  border: 1px solid var(--hairline);
+  background: var(--color-shadow-grey);
+  color: var(--color-ivory);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  animation: rating-prompt-in 0.45s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+@keyframes rating-prompt-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rating-prompt__close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-dust);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.rating-prompt__close svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.rating-prompt__close:hover {
+  color: var(--color-signal);
+}
+
+.rating-prompt__close:focus-visible {
+  outline: 2px solid var(--color-ivory);
+  outline-offset: 1px;
+}
+
+.rating-prompt__eyebrow {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-signal);
+}
+
+.rating-prompt__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--color-ivory);
+}
+
+.rating-prompt__copy {
+  margin: 0 0 1.1rem;
+  padding-right: 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--color-dust);
+}
+
+.rating-prompt__stars {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin: 0 0 1.1rem -0.3rem;
+}
+
+.rating-prompt__star {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.rating-prompt__star svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  fill: transparent;
+  stroke: color-mix(in srgb, var(--color-dust) 50%, transparent);
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+  transition:
+    fill 0.15s ease,
+    stroke 0.15s ease;
+}
+
+.rating-prompt__star:hover,
+.rating-prompt__star:focus-visible {
+  transform: scale(1.12);
+}
+
+.rating-prompt__star:focus-visible {
+  outline: 2px solid var(--color-ivory);
+  outline-offset: 0;
+}
+
+.rating-prompt__star.is-filled svg {
+  fill: var(--color-signal);
+  stroke: var(--color-signal);
+}
+
+.rating-prompt__readout {
+  margin-left: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--color-dust);
+}
+
+.rating-prompt__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
+}
+
+.rating-prompt__label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-dust);
+}
+
+.rating-prompt__input {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--hairline);
+  background: color-mix(in srgb, var(--color-graphite) 45%, transparent);
+  color: var(--color-ivory);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+.rating-prompt__input::placeholder {
+  color: color-mix(in srgb, var(--color-dust) 55%, transparent);
+}
+
+.rating-prompt__input:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 1px;
+}
+
+.rating-prompt__hint,
+.rating-prompt__error {
+  margin: -0.35rem 0 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.rating-prompt__hint {
+  color: var(--color-dust);
+}
+
+.rating-prompt__error {
+  color: var(--color-signal);
+}
+
+.rating-prompt__submit {
+  margin-top: 0.25rem;
+  padding: 0.75rem 1.4rem;
+  border: 1px solid var(--color-signal);
+  background: transparent;
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.rating-prompt__submit:hover:not(:disabled) {
+  background: var(--color-signal);
+  color: var(--color-shadow-grey);
+}
+
+.rating-prompt__submit:focus-visible {
+  outline: 2px solid var(--color-ivory);
+  outline-offset: 3px;
+}
+
+.rating-prompt__submit:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.rating-prompt__done {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-signal);
+}
+
+.rating-prompt__note {
+  margin: 0 0 1.1rem;
+  padding-right: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  color: var(--color-dust);
+}
+
+.rating-prompt__link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--color-ivory);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-signal);
+  padding-bottom: 0.15rem;
+  transition: color 0.15s ease;
+}
+
+.rating-prompt__link:hover {
+  color: var(--color-signal);
+}
+
+.rating-prompt__link:focus-visible {
+  outline: 2px solid var(--color-ivory);
+  outline-offset: 3px;
+}
+
+/* Honeypot: rendered, interactive to bots, invisible to humans. */
+.rating-prompt__honeypot {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rating-prompt {
+    animation: none;
+  }
+
+  .rating-prompt__star,
+  .rating-prompt__star svg {
+    transition: none;
+  }
+
+  .rating-prompt__star:hover,
+  .rating-prompt__star:focus-visible {
+    transform: none;
+  }
+}

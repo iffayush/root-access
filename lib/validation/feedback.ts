@@ -9,7 +9,14 @@ import { z } from "zod";
 export const feedbackSchema = z.object({
   rating: z.number().int().min(1).max(5),
   name: z.string().trim().max(40).optional().default(""),
-  comment: z.string().trim().min(4, "Say a little more").max(140),
+  // Optional: the home-page rating prompt allows a stars-only rating. When a
+  // line is given it still has to say something.
+  comment: z
+    .string()
+    .trim()
+    .max(140)
+    .refine((value) => value.length === 0 || value.length >= 4, "Say a little more")
+    .default(""),
   // Honeypot: any value is accepted here and silently dropped by the route —
   // bots get an identical "ok" response and learn nothing.
   website: z.string().max(500).optional().default(""),

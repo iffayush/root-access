@@ -9,6 +9,7 @@ import { Contact } from "@/components/contact/Contact";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteMenu } from "@/components/navigation/SiteMenu";
 import { ScrollMotion } from "@/components/motion/ScrollMotion";
+import { RatingPrompt } from "@/components/feedback/RatingPrompt";
 import "@/components/hero/hero.css";
 
 export default function Home() {
@@ -30,6 +31,9 @@ export default function Home() {
           <Contact />
         </ScrollMotion>
       </main>
+      {/* Outside ScrollMotion so no animated ancestor can trap its position:fixed;
+          placed here so its tab order follows the contact links. */}
+      <RatingPrompt />
       <SiteFooter />
     </>
   );

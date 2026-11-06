@@ -83,9 +83,11 @@ export default async function TestimonialsPage() {
                         </span>
                         <RatingDots rating={entry.rating} />
                       </div>
-                      <p className="font-sans text-base sm:text-lg leading-relaxed text-[var(--color-dust)]">
-                        “{entry.comment}”
-                      </p>
+                      {entry.comment && (
+                        <p className="font-sans text-base sm:text-lg leading-relaxed text-[var(--color-dust)]">
+                          “{entry.comment}”
+                        </p>
+                      )}
                       <p className="mt-2 font-mono text-[10px] tracking-widest text-[color-mix(in_srgb,var(--color-dust)_60%,transparent)] uppercase">
                         {entry.date}
                       </p>

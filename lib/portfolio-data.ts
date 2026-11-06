@@ -14,6 +14,7 @@ export type Project = {
   status: "completed" | "in-progress";
   tags: readonly string[];
   results?: readonly ProjectResult[];
+  repoUrl: string;
   imageName: string;
   imageWidth: number;
   imageHeight: number;
@@ -63,15 +64,38 @@ export type PracticePlatform = {
 
 export const projects: readonly Project[] = [
   {
+    id: "hearth",
+    slug: "hearth",
+    number: "01",
+    title: "HEARTH",
+    subtitle: "End-to-End Encrypted, Self-Hosted Private Forum",
+    description:
+      "Private, invite-only forum for small trusted groups that lives on its members' own devices — no company, no third-party accounts. Every member runs the same Python node; posts and photos are end-to-end encrypted with a libsodium group key, signed and hash-chained into per-member append-only logs so forged or altered entries are rejected, and synced through a hardened always-on home node reachable via port forwarding, WireGuard, or Tailscale Funnel.",
+    status: "in-progress",
+    tags: ["Python", "libsodium", "End-to-End Encryption", "Append-Only Logs", "Self-Hosted"],
+    results: [
+      {
+        label: "Automated Tests",
+        value: "500+",
+        method: "pytest suite run in CI on Linux, Windows and macOS",
+      },
+    ],
+    repoUrl: "https://github.com/iffayush/hearth",
+    imageName: "hero_hearth.webp",
+    imageWidth: 1280,
+    imageHeight: 640,
+  },
+  {
     id: "aegis",
     slug: "aegis",
-    number: "01",
+    number: "02",
     title: "AEGIS",
     subtitle: "Single-Binary Edge Proxy & Rate-Limiting Gate",
     description:
       "Single Go binary deployed as a reverse proxy in front of HTTP applications — inspecting requests, rate-limiting clients per IP and time window, and forwarding only what passes its SQL injection, XSS, and path traversal rules. Ships with an observe mode that audits would-be blocks, an enforce mode that applies them, and a built-in terminal UI.",
     status: "in-progress",
     tags: ["Go", "Reverse Proxy", "Rate Limiting", "Request Filtering", "Self-Hosted"],
+    repoUrl: "https://github.com/iffayush/aegis",
     imageName: "dashboard_aegis.png",
     imageWidth: 1155,
     imageHeight: 1040,
@@ -79,37 +103,17 @@ export const projects: readonly Project[] = [
   {
     id: "aws-threat-detection",
     slug: "aws-threat-detection",
-    number: "02",
+    number: "03",
     title: "AWS Threat Detection",
     subtitle: "Cloud Trail & VPC Log Analysis Pipeline",
     description:
       "Threat detection and incident response pipeline analyzing AWS CloudTrail and VPC Flow logs to detect suspicious activity mapped to MITRE ATT&CK techniques.",
     status: "completed",
     tags: ["AWS CloudTrail", "GuardDuty", "Python", "SIEM", "Detection Engineering"],
+    repoUrl: "https://github.com/iffayush/AWS-Threat-Detection",
     imageName: "aws-architecture.png",
     imageWidth: 1337,
     imageHeight: 353,
-  },
-  {
-    id: "wass",
-    slug: "wass",
-    number: "03",
-    title: "WASS",
-    subtitle: "Web Application Security Scanner",
-    description:
-      "Automated web application security scanner designed to detect web vulnerabilities (including XSS, SQLi, and misconfigurations) through non-destructive dynamic analysis and structured security reporting.",
-    status: "in-progress",
-    tags: ["Python", "DAST", "OWASP Top 10", "Docker", "Security Automation"],
-    results: [
-      {
-        label: "Benchmark Test Cases",
-        value: "100+",
-        method: "Automated validation runs against OWASP Juice Shop test environment",
-      },
-    ],
-    imageName: "hero_wass.png",
-    imageWidth: 1902,
-    imageHeight: 971,
   },
 ];
 

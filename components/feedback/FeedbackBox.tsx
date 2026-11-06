@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { hasTransmittedThisSession, submitFeedback } from "@/lib/feedback/client";
 import "./feedback-box.css";
 
 const WITTY_LINES = [
@@ -11,8 +12,6 @@ const WITTY_LINES = [
   "Your rating cannot crash production. My confidence can, though.",
   "Statistically insignificant sample size. Emotionally significant. Proceed.",
 ] as const;
-
-const SESSION_KEY = "feedback-transmitted";
 
 type Phase = "form" | "sending" | "done" | "already" | "offline";
 
@@ -32,12 +31,8 @@ export function FeedbackBox() {
   useEffect(() => {
     startedAt.current = Date.now();
     setWittyLine(WITTY_LINES[Math.floor(Math.random() * WITTY_LINES.length)]);
-    try {
-      if (sessionStorage.getItem(SESSION_KEY) === "1") {
-        setPhase("already");
-      }
-    } catch {
-      // Storage blocked — always ask.
+    if (hasTransmittedThisSession()) {
+      setPhase("already");
     }
   }, []);
 
@@ -45,38 +40,21 @@ export function FeedbackBox() {
     if (phase !== "form" || rating === 0) return;
     setError(null);
     setPhase("sending");
-    try {
-      const res = await fetch("/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          rating,
-          name,
-          comment,
-          // Honeypot is uncontrolled — read straight from the DOM. Bots that
-          // auto-fill it get silently dropped server-side.
-          website: honeypotRef.current?.value ?? "",
-          startedAt: startedAt.current,
-        }),
-      });
-      if (res.ok) {
-        try {
-          sessionStorage.setItem(SESSION_KEY, "1");
-        } catch {
-          // Storage blocked — state still advances for this visit.
-        }
-        setPhase("done");
-        return;
-      }
-      const data = (await res.json().catch(() => null)) as { error?: string } | null;
-      if (res.status === 503) {
-        setPhase("offline");
-      } else {
-        setError(data?.error ?? "Transmission failed.");
-        setPhase("form");
-      }
-    } catch {
-      setError("Transmission failed.");
+    const result = await submitFeedback({
+      rating,
+      name,
+      comment,
+      // Honeypot is uncontrolled — read straight from the DOM. Bots that
+      // auto-fill it get silently dropped server-side.
+      website: honeypotRef.current?.value ?? "",
+      startedAt: startedAt.current,
+    });
+    if (result.status === "ok") {
+      setPhase("done");
+    } else if (result.status === "offline") {
+      setPhase("offline");
+    } else {
+      setError(result.message);
       setPhase("form");
     }
   }
