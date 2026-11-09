@@ -19,7 +19,7 @@ The original brief is the product spec. This file records what was actually buil
 
 ## Stack
 
-Next.js 16.3.8 App Router, React 19, TypeScript, Tailwind v4. Installed: `gsap` 3.15 + `@gsap/react` (3D transforms use `rotationY`/`rotationX`, never `rotateY`/`rotateX`), `ogl` 1.0.11 (FaultyTerminal only). Not installed: MDX (`next-mdx-remote`, `gray-matter`, `zod`), Lenis, Lucide. **No `motion` package** — CountUp/DecryptedText were hand-adapted (rAF + IntersectionObserver) to avoid it; keep it that way unless asked. No CMS, database, auth, or Three.js.
+Next.js 16.4.3 App Router (bumped from 16.3.8 on 2026-11-09 for GHSA-2464-fhr4-w9xw, GHSA-673q-mjm6-r5xr, GHSA-p3m5-59mp-jv5r), React 19, TypeScript, Tailwind v4. Installed: `gsap` 3.15 + `@gsap/react` (3D transforms use `rotationY`/`rotationX`, never `rotateY`/`rotateX`), `ogl` 1.0.11 (FaultyTerminal only), `pdfjs-dist` 6.4.299 (paper reader, lazy-loaded). Not installed: MDX (`next-mdx-remote`, `gray-matter`, `zod`), Lenis, Lucide. **No `motion` package** — CountUp/DecryptedText were hand-adapted (rAF + IntersectionObserver) to avoid it; keep it that way unless asked. No CMS, database, auth, or Three.js.
 
 `next.config.ts` sets `turbopack.root` to `process.cwd()` because `C:\Users\Acer` is a git root. Do not run git commands against that home repo. Do not commit unless Ayush asks.
 
