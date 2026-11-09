@@ -20,7 +20,17 @@ export type Project = {
   imageHeight: number;
 };
 
-export type FieldNote = {
+export type PaperAward = {
+  /** Badge text, e.g. "1st Place". */
+  place: string;
+  event: string;
+  /** Short event name for tight spaces (the rotating seal). */
+  short: string;
+  organizer: string;
+  date: string;
+};
+
+export type Paper = {
   id: string;
   slug: string;
   title: string;
@@ -28,6 +38,12 @@ export type FieldNote = {
   category: string;
   status: "published" | "placeholder";
   summary: string;
+  /** Public path of the PDF; papers without one are listed but not readable. */
+  pdf?: string;
+  /** Page count, shown before the document has loaded. */
+  pages?: number;
+  /** Recognition the paper won; shown as a badge on its row and in the reader. */
+  award?: PaperAward;
 };
 
 export type CapabilityGroup = {
@@ -159,33 +175,49 @@ export const experience: readonly ExperienceEntry[] = [
   },
 ];
 
-export const fieldNotes: readonly FieldNote[] = [
+export const papers: readonly Paper[] = [
   {
-    id: "fn-01",
+    id: "paper-01",
     slug: "threat-detection-response",
     title: "AI-Based Network Security Threat Detection and Response",
     date: "May 26",
     category: "Network Security",
     status: "published",
     summary: "this report proposes an improved AI-driven network security threat detection and response architecture, rather than relying on a single convolutional model, the proposed system introduces a multi-model ensemble combining convolutional and anomaly-based detection to achieve precise threat coverage. Supported by external threat intelligence integration, along with a confidence-based triage layer to reduce the number of false positives, explainability mechanisms to support expert review, hierarchy based automated response actions and a continuous retraining feedback loop for sustained performance as threats evolve.",
+    pdf: "/papers/threat-detection-response.pdf",
+    pages: 12,
+    // From the STCET Certificate of Appreciation, 14 May 2026.
+    award: {
+      place: "1st Place",
+      event: "Report Writing Competition, National Technology Day 2026",
+      short: "National Technology Day 2026",
+      organizer: "Publication Cell, STCET with IEEE Student Branch, IIC & NDLI Club",
+      date: "14 May 2026",
+    },
   },
   {
-    id: "fn-02",
-    slug: "aws-cloudtrail-anomaly",
-    title: "AWS Security Lab",
-    date: "Oct 25",
-    category: "Cloud Security",
+    id: "paper-02",
+    slug: "cyber-safe-education",
+    title: "Cyber-Safe Education: Building a Secure and Responsible Digital Learning Ecosystem for Viksit Bharat",
+    date: "Nov 26",
+    category: "Security Education",
     status: "published",
-    summary: "This project demonstrates the creation of a Cloud Threat Detection and Automated Response System using AWS CloudTrail, Config, GuardDuty, CloudWatch, and Lambda. The goal was to simulate real-world cloud attacks, detect threats, and automatically respond to incidents, such as disabling compromised IAM users or blocking malicious IPs entirely through AWS automation.",
+    summary: "Essay on building a secure and responsible digital learning ecosystem for Viksit Bharat, opening with a real phishing chain — a fake free-Discord-Nitro link that hijacked accounts and spread itself through each victim's friend list.",
+    pdf: "/papers/cyber-safe-education.pdf",
+    pages: 6,
   },
   {
-    id: "fn-03",
-    slug: "pentest-report",
-    title: "powerdialer.ai Staging Backend Exposure Findings",
+    // Published 2026-11-09: owner confirmed the findings are remediated and
+    // PowerDialer.ai cleared public disclosure.
+    id: "paper-03",
+    slug: "staging-backend-exposure",
+    title: "Black-Box Penetration Test: Staging Backend Exposure Chain",
     date: "Jun 26",
     category: "Application Security",
     status: "published",
     summary: "Black-box penetration test of PowerDialer.ai's staging environment, identifying a chained vulnerability where an exposed API URL in client-side JavaScript (CVSS 5.3) led to discovery of a publicly accessible, unauthenticated backend (CVSS 7.5). Followed OWASP Testing Guide and PTES methodology; delivered a prioritized findings report with PoCs, remediation code, and a defense-in-depth IAM/tenant-isolation redesign to prevent recurrence.",
+    pdf: "/papers/staging-backend-exposure.pdf",
+    pages: 9,
   },
 ];
 

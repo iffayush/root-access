@@ -1,0 +1,167 @@
+/* Award treatment for Technical Papers — Signal yellow on graphite, HUD
+   motion only when html.motion is set (no reduced-motion preference). */
+
+/* --- badge ------------------------------------------------------------------ */
+
+.award-badge {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.65rem 0.3rem 0.5rem;
+  overflow: hidden;
+  background: var(--color-signal);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-signal) 60%, white),
+    0 0 18px color-mix(in srgb, var(--color-signal) 45%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-shadow-grey);
+}
+
+.award-badge__icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+}
+
+/* Light sweep across the chip every few seconds. */
+html.motion .award-badge::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.8) 50%, transparent 65%);
+  transform: translateX(-130%);
+  animation: award-sheen 3.8s ease-in-out infinite;
+}
+
+@keyframes award-sheen {
+  0%,
+  55% {
+    transform: translateX(-130%);
+  }
+  85%,
+  100% {
+    transform: translateX(130%);
+  }
+}
+
+/* --- seal ------------------------------------------------------------------- */
+
+/* Visibility comes from the caller's classes (unlayered `display` here would
+   override Tailwind's layered `hidden`). */
+.award-seal {
+  width: 5.5rem;
+  height: 5.5rem;
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--color-signal) 30%, transparent));
+}
+
+.award-seal__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.award-seal__orbit {
+  transform-origin: 50px 50px;
+}
+
+html.motion .award-seal__orbit {
+  animation: award-orbit 22s linear infinite;
+}
+
+@keyframes award-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.award-seal__ring {
+  fill: none;
+  stroke: var(--color-signal);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 3;
+  opacity: 0.7;
+}
+
+.award-seal__text {
+  font-family: var(--font-mono);
+  font-size: 7.4px;
+  font-weight: 600;
+  fill: var(--color-signal);
+}
+
+.award-seal__pulse {
+  fill: none;
+  stroke: var(--color-signal);
+  stroke-width: 1;
+  transform-origin: 50px 50px;
+  opacity: 0.6;
+}
+
+html.motion .award-seal__pulse {
+  animation: award-pulse 2.6s ease-out infinite;
+}
+
+@keyframes award-pulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+.award-seal__core {
+  fill: var(--color-signal);
+}
+
+.award-seal__rank {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  fill: var(--color-shadow-grey);
+}
+
+/* --- awarded row ------------------------------------------------------------ */
+
+.paper-row.is-awarded {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Signal edge bar + warm wash, bled slightly into the page margin. */
+.paper-row.is-awarded::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 -1rem;
+  z-index: -1;
+  pointer-events: none;
+  border-left: 2px solid var(--color-signal);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-signal) 11%, transparent),
+    transparent 65%
+  );
+  transition: opacity 0.3s ease;
+}
+
+.paper-row.is-awarded:hover::before {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-signal) 17%, transparent),
+    transparent 75%
+  );
+}

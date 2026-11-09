@@ -41,8 +41,8 @@ export function Hero() {
               <Link className="hero-cta" href="/#work">
                 View work
               </Link>
-              <Link className="hero-cta" href="/#field-notes">
-                Field notes
+              <Link className="hero-cta" href="/#technical-papers">
+                Technical papers
               </Link>
             </div>
           </div>

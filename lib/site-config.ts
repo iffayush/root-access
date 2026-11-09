@@ -36,7 +36,7 @@ export const siteConfig: {
   nav: [
     { label: "Work", href: "/#work" },
     { label: "About", href: "/#profile" },
-    { label: "Field Notes", href: "/#field-notes" },
+    { label: "Technical Papers", href: "/#technical-papers" },
     { label: "Testimonials", href: "/testimonials" },
     { label: "Contact", href: "/#contact" },
   ],

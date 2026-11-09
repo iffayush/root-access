@@ -2,7 +2,7 @@ import { Hero } from "@/components/hero/Hero";
 import { SelectedWork } from "@/components/work/SelectedWork";
 import { Profile } from "@/components/profile/Profile";
 import { Experience } from "@/components/experience/Experience";
-import { FieldNotes } from "@/components/field-notes/FieldNotes";
+import { TechnicalPapers } from "@/components/papers/TechnicalPapers";
 import { Capabilities } from "@/components/capabilities/Capabilities";
 import { Credentials } from "@/components/credentials/Credentials";
 import { Contact } from "@/components/contact/Contact";
@@ -25,7 +25,7 @@ export default function Home() {
           <Profile />
           <SelectedWork />
           <Experience />
-          <FieldNotes />
+          <TechnicalPapers />
           <Capabilities />
           <Credentials />
           <Contact />

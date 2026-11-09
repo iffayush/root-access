@@ -97,11 +97,11 @@ export function ScrollMotion({ children }: { children: ReactNode }) {
           );
         }
 
-        // Field Notes rows reveal
-        const fieldNoteRows = scope.querySelectorAll<HTMLElement>(".field-note-row");
-        if (fieldNoteRows.length > 0) {
+        // Technical Papers rows reveal
+        const paperRows = scope.querySelectorAll<HTMLElement>(".paper-row");
+        if (paperRows.length > 0) {
           gsap.fromTo(
-            fieldNoteRows,
+            paperRows,
             { opacity: 0, x: -20 },
             {
               opacity: 1,
@@ -110,7 +110,7 @@ export function ScrollMotion({ children }: { children: ReactNode }) {
               ease: "power2.out",
               stagger: 0.08,
               scrollTrigger: {
-                trigger: fieldNoteRows[0],
+                trigger: paperRows[0],
                 start: "top 85%",
                 toggleActions: "play none none reverse",
               },
